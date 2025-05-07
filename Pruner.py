@@ -84,6 +84,8 @@ class Pruner(object):
                         elif self.beta2 == 2.:
                             self.exp_avg_unc[n] = (update_step*self.exp_avg_unc[n] + \
                                                     (self.ipt[n]-self.exp_avg_ipt[n])**2 )/(update_step+1)
+                        if torch.isnan(p.grad).any():
+                            continue
                         self.ipt[n] = (p * p.grad).abs().detach()
                     else:
                         self.ipt[n] = (self.ipt[n]*local_step+(p*p.grad).abs().detach())/(local_step+1)
